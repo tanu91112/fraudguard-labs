@@ -36,6 +36,19 @@ FraudGuard combines machine learning algorithms with blockchain-inspired data st
 - Smart contract interaction panel
 - Cyberpunk/neon UI theme
 
+## 🔗 QIE Blockchain Integration
+
+FraudGuard Labs now records **actual fraud events on the QIE blockchain** via a deployed smart contract. Each fraud alert is logged as an **immutable on-chain event** containing the transaction ID and risk score, ensuring transparent and tamper-proof auditing.
+
+- **Smart Contract Address:** `0xd9145CCE52D386f254917e481eB44e9943F39138`
+- **Transaction Hash (example event):** `0xc1e07547805cf8ae9e8f76105d8141f6aed10c3559f87b264dc7c703aa1e0774`
+
+Each logged fraud event can be verified on-chain, demonstrating real blockchain interaction for the hackathon.
+
+## 📁 Project Structure
+
+
+
 ## 📁 Project Structure
 
 ```
