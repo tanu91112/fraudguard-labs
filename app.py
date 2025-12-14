@@ -117,6 +117,13 @@ if 'alerts' not in st.session_state:
 st.markdown("<h1 class='header'>🛡️ FraudGuard Labs - Real-Time Fraud Detection</h1>", unsafe_allow_html=True)
 st.markdown("<p style='color: #a0a0a0;'>AI-Powered Fraud Detection with Blockchain Audit Trail Simulation</p>", unsafe_allow_html=True)
 
+# Blockchain Info Display
+st.markdown("<div class='card' style='background: linear-gradient(135deg, rgba(0, 245, 255, 0.1), rgba(0, 255, 157, 0.1)); border-left: 4px solid var(--primary-color);'>", unsafe_allow_html=True)
+st.markdown("<h3 class='header'>🔗 Blockchain Integration</h3>", unsafe_allow_html=True)
+st.markdown("<p><strong>Smart Contract Address:</strong> 0xd9145CCE52D386f254917e481eB44e9943F39138</p>", unsafe_allow_html=True)
+st.markdown("<p><strong>Network:</strong> QIE Testnet</p>", unsafe_allow_html=True)
+st.markdown("</div>", unsafe_allow_html=True)
+
 # Sidebar
 with st.sidebar:
     st.markdown("<h2 class='header'>🎛️ Controls</h2>", unsafe_allow_html=True)
@@ -152,6 +159,23 @@ with st.sidebar:
                 if is_fraud:
                     st.session_state.fraud_registry.flag_fraud(tx_id, "High risk score detected")
                 st.session_state.audit_trail.log_audit(tx_id, risk_score, datetime.now())
+                
+                # Add blockchain transaction info
+                if is_fraud:
+                    # Simulate blockchain transaction hash
+                    import hashlib
+                    hash_input = f"{tx_id}{risk_score}{datetime.now().timestamp()}".encode()
+                    tx_hash = "0x" + hashlib.sha256(hash_input).hexdigest()[:64]
+                    
+                    # Store transaction hash in session state
+                    if 'blockchain_txs' not in st.session_state:
+                        st.session_state.blockchain_txs = []
+                    
+                    st.session_state.blockchain_txs.append({
+                        'transaction_id': tx_id,
+                        'blockchain_tx_hash': tx_hash,
+                        'timestamp': datetime.now()
+                    })
             
             # Add to transaction data
             tx_record = {
@@ -191,6 +215,8 @@ with st.sidebar:
         st.session_state.risk_registry.clear()
         st.session_state.fraud_registry.clear()
         st.session_state.audit_trail.clear()
+        if 'blockchain_txs' in st.session_state:
+            st.session_state.blockchain_txs = []
         st.success("Data cleared!")
 
 # Main dashboard
@@ -312,6 +338,19 @@ with registry_col3:
         st.info("No audit logs")
 
 st.markdown("</div>", unsafe_allow_html=True)
+
+# Blockchain Transaction Hashes
+if 'blockchain_txs' in st.session_state and st.session_state.blockchain_txs:
+    st.markdown("<div class='card'><h3 class='header'>🔗 Blockchain Transaction Hashes</h3>", unsafe_allow_html=True)
+    for tx in st.session_state.blockchain_txs[-5:]:  # Show last 5 transactions
+        st.markdown(f"""
+        <div class='card' style='background: linear-gradient(135deg, rgba(0, 245, 255, 0.1), rgba(0, 255, 157, 0.1));'>
+            <p><strong>Transaction ID:</strong> {tx['transaction_id']}</p>
+            <p><strong>TX Hash:</strong> {tx['blockchain_tx_hash']}</p>
+            <p><strong>Timestamp:</strong> {tx['timestamp'].strftime('%Y-%m-%d %H:%M:%S')}</p>
+        </div>
+        """, unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # Footer with attribution
 st.markdown("---")
